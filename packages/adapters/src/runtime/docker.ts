@@ -5609,6 +5609,14 @@ export class DockerRuntime implements RuntimeAdapter {
         RestartPolicy: restartPolicy,
         LogConfig: DEFAULT_CONTAINER_LOG_CONFIG,
         ...dockerResourceLimits(config.resources),
+        ...(config.advanced?.readOnly !== undefined
+          ? { ReadonlyRootfs: config.advanced.readOnly }
+          : {}),
+        ...(config.advanced?.tmpfs ? { Tmpfs: config.advanced.tmpfs } : {}),
+        ...(config.advanced?.capDrop ? { CapDrop: config.advanced.capDrop } : {}),
+        ...(config.advanced?.noNewPrivileges
+          ? { SecurityOpt: ["no-new-privileges:true"] }
+          : {}),
         ...(ownsProjectEndpoint ? { PortBindings: portBindings } : {}),
         Binds: binds,
         // The project network is the default; a compose `network_mode` replaces it.
