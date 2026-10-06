@@ -525,6 +525,10 @@ export class CloudRuntime implements MultiServiceRuntimeAdapter {
     // here. Declared so the deploy says so once per service and continues, rather
     // than the image's own launcher running with nothing having mentioned it (#575).
     "entrypoint",
+    "readOnly",
+    "tmpfs",
+    "capDrop",
+    "noNewPrivileges",
   ]);
 
   private readonly client: Oblien;

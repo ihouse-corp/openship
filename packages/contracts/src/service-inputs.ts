@@ -154,6 +154,26 @@ const AdvancedSchema = Type.Object(
      */
     networkMode: Type.Optional(Type.Union([Type.String({ maxLength: 200 }), Type.Null()])),
     pidMode: Type.Optional(Type.Union([Type.String({ maxLength: 200 }), Type.Null()])),
+    readOnly: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
+    tmpfs: Type.Optional(
+      Type.Union([
+        Type.Record(
+          Type.String({ pattern: "^/[^:\\u0000-\\u001F\\u007F]+$", maxLength: 4096 }),
+          Type.String({ maxLength: 2000, pattern: "^[^\\u0000-\\u001F\\u007F]*$" }),
+          { maxProperties: 100, additionalProperties: false },
+        ),
+        Type.Null(),
+      ]),
+    ),
+    capDrop: Type.Optional(
+      Type.Union([
+        Type.Array(Type.String({ pattern: "^[A-Z][A-Z0-9_]*$", maxLength: 100 }), {
+          maxItems: 100,
+        }),
+        Type.Null(),
+      ]),
+    ),
+    noNewPrivileges: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
     /**
      * Container ENTRYPOINT as argv (compose `entrypoint`). Same round-trip-only
      * reasoning as the two above: the compose file owns it, so this exists so a

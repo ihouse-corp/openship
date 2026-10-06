@@ -13,6 +13,7 @@ import {
   composeMountToSpec,
   composePortToSpec,
   parseComposeNamespace,
+  parseComposeHardening,
   parseEnvFile,
 } from "@repo/core";
 import type { ComposeAdvanced, ComposeHealthcheck, ComposeNamespaceField } from "@repo/core";
@@ -586,6 +587,9 @@ function parseAdvanced(
   unsupported: ComposeUnsupportedField[],
 ): ComposeAdvanced | undefined {
   const advanced: ComposeAdvanced = {};
+  const hardening = parseComposeHardening(svc, (value) => interpolateComposeString(value, env));
+  Object.assign(advanced, hardening.advanced);
+  unsupported.push(...hardening.issues.map((issue) => ({ service: serviceName, ...issue })));
 
   const healthcheck = parseHealthcheck(svc.healthcheck, env);
   if (healthcheck) advanced.healthcheck = healthcheck;
@@ -676,10 +680,8 @@ const UNSUPPORTED_SERVICE_KEYS: Record<string, string> = {
   // ── Host privilege + namespaces ──
   privileged: "privileged is not modeled — the container runs unprivileged.",
   cap_add: "cap_add is not modeled — no extra capabilities are granted.",
-  cap_drop: "cap_drop is not modeled — the default capability set is kept.",
   devices: "devices is not modeled — no host devices are passed through.",
   device_cgroup_rules: "device_cgroup_rules is not modeled.",
-  security_opt: "security_opt is not modeled — default seccomp/AppArmor apply.",
   sysctls: "sysctls is not modeled — kernel parameters stay at their defaults.",
   ulimits: "ulimits is not modeled — daemon defaults apply.",
   shm_size: "shm_size is not modeled — /dev/shm stays at Docker's 64MB default.",
@@ -705,8 +707,6 @@ const UNSUPPORTED_SERVICE_KEYS: Record<string, string> = {
   mac_address: "mac_address is not modeled.",
   platform: "platform is not modeled — the image is pulled for the host's architecture.",
   init: "init is not modeled — no init process is injected.",
-  read_only: "read_only (root filesystem) is not modeled — the root filesystem stays writable.",
-  tmpfs: "tmpfs is not modeled — no in-memory filesystem is mounted.",
   // ── Networking ──
   dns: "dns is not modeled — the container uses the Docker network's resolver.",
   dns_search: "dns_search is not modeled.",

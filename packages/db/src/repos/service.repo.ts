@@ -403,6 +403,10 @@ export function composeWritePatch(
  * right way, through `reconcileFromCompose` applying `theirs` wholesale.
  */
 const COMPOSE_OWNED_ADVANCED_KEYS = [
+  "readOnly",
+  "tmpfs",
+  "capDrop",
+  "noNewPrivileges",
   "networkMode",
   "pidMode",
   "entrypoint",

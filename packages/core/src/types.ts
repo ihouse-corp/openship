@@ -386,6 +386,12 @@ export type ComposeAdvanced = {
    * flush or checkpoint on shutdown and need longer than the default.
    */
   stopGracePeriod?: string;
+  /** Compose container restrictions, retained across deploy and rollback. */
+  readOnly?: boolean;
+  tmpfs?: Record<string, string>;
+  capDrop?: string[];
+  /** Only the restrictive no-new-privileges security option is modeled. */
+  noNewPrivileges?: boolean;
 };
 
 /**
