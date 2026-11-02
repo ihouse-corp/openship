@@ -260,3 +260,11 @@ the [iRedMail engine](apps/email/engine/LICENSE) is GPL-licensed and is included
 in several control-plane distributions even when mail setup is not used.
 See the [component and packaging inventory](docs/licensing.md) for the recorded
 license boundaries and outstanding upstream notice review.
+
+## Temporary Actions artifacts
+
+The Actions uploads in `scaling-e2e.yml` retain newly uploaded temporary copies for **1 day**, then GitHub expires them automatically. Download required CI/debug copies within that window; existing artifacts keep their original expiry.
+
+Formal GitHub Releases, TestFlight delivery, GHCR images and production download storage retain their existing lifecycle. The release workflow and its resumable release intermediates keep their existing retention.
+
+Docker build record artifacts from `docker-images.yml` also expire after **1 day** via `DOCKER_BUILD_RECORD_RETENTION_DAYS`; the pushed image, digest, SBOM and provenance remain on their existing registry lifecycle.

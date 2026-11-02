@@ -112,6 +112,8 @@ jobs:
         if: steps.resume.outputs.reused != 'true'
         id: build
         uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_RECORD_RETENTION_DAYS: "1"
         with:
           context: .
           file: ${{ matrix.dockerfile }}
