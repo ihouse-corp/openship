@@ -102,4 +102,4 @@ jobs:
           name: scaling-e2e-${{ matrix.journey }}-diagnostics
           path: ${{ runner.temp }}/openship-scaling
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 1
